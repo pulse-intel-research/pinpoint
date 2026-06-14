@@ -39,3 +39,34 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+import { NextResponse } from 'next/server'
+
+export async function GET() {
+  const apiKey = process.env.SPORTSGAMEODDS_API_KEY
+
+  if (!apiKey) {
+    return NextResponse.json({ error: 'Missing API key' }, { status: 500 })
+  }
+
+  try {
+    const res = await fetch(
+      'https://api.sportsgameodds.com/v2/events?leagueID=NBA&oddsAvailable=true&limit=10',
+      {
+        headers: { 'X-Api-Key': apiKey },
+        next: { revalidate: 60 },
+      }
+    )
+
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: `API responded with ${res.status}` },
+        { status: res.status }
+      )
+    }
+
+    const data = await res.json()
+    return NextResponse.json(data)
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to fetch odds' }, { status: 500 })
+  }
+}
