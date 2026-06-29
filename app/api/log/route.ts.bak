@@ -1,0 +1,36 @@
+import { NextResponse } from "next/server"
+import { createClient } from "@supabase/supabase-js"
+
+export async function POST(req: Request) {
+  try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+    console.log("LOG ROUTE: url present?", url.length > 0, "key present?", key.length > 0)
+    const supabase = createClient(url, key)
+    const bets = await req.json()
+    if (!Array.isArray(bets) || bets.length === 0) {
+      return NextResponse.json({ logged: 0 })
+    }
+    const rows = bets.map((b) => ({
+      game_id: b.gameId,
+      team: b.team,
+      opponent: b.opp,
+      book: b.book,
+      price: b.price,
+      model_prob: b.modelProb,
+      implied_prob: b.implied,
+      edge: b.edge,
+      ev: b.ev,
+      commence_time: b.commenceTime || null,
+    }))
+    const { error } = await supabase.from("flagged_bets").upsert(rows, { onConflict: "game_id,team,book", ignoreDuplicates: true })
+    if (error) {
+      console.log("LOG ROUTE SUPABASE ERROR:", error.message)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+    return NextResponse.json({ logged: rows.length })
+  } catch (e) {
+    console.log("LOG ROUTE CATCH:", String(e))
+    return NextResponse.json({ error: "Bad request" }, { status: 500 })
+  }
+}
