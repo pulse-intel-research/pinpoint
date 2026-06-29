@@ -327,7 +327,7 @@ function Dashboard() {
           </div>
         )}
 
-        {bets.map((b, i) => <BetCard key={b.id} b={b} rank={i + 1} />)}
+{bets.map((b, i) => <BetCard key={b.id} b={b} rank={i + 1} />)}
       </div>
     </div>
   )
