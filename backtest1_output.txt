@@ -1,0 +1,411 @@
+key loaded: 36 chars
+
+Pulling finished MLB games 2026-06-12..2026-06-19
+90 finished MLB games.
+
+[1/90] Pittsburgh Pirates vs Miami Marlins
+    pass: no +EV soft price vs Pinnacle
+[2/90] Washington Nationals vs Seattle Mariners
+    pass: no +EV soft price vs Pinnacle
+[3/90] Baltimore Orioles vs San Diego Padres
+    pass: no +EV soft price vs Pinnacle
+[4/90] Boston Red Sox vs Texas Rangers
+    pass: no +EV soft price vs Pinnacle
+[5/90] Cleveland Guardians vs Detroit Tigers
+    pass: no +EV soft price vs Pinnacle
+[6/90] Cincinnati Reds vs Arizona Diamondbacks
+    pass: no +EV soft price vs Pinnacle
+[7/90] New York Mets vs Atlanta Braves
+    pass: no +EV soft price vs Pinnacle
+[8/90] Toronto Blue Jays vs New York Yankees
+    pass: no +EV soft price vs Pinnacle
+[9/90] Milwaukee Brewers vs Philadelphia Phillies
+    pass: no +EV soft price vs Pinnacle
+[10/90] Chicago White Sox vs Los Angeles Dodgers
+    pass: no +EV soft price vs Pinnacle
+[11/90] Minnesota Twins vs St. Louis Cardinals
+    pass: no +EV soft price vs Pinnacle
+[12/90] Kansas City Royals vs Houston Astros
+    pass: no +EV soft price vs Pinnacle
+[13/90] Los Angeles Angels vs Tampa Bay Rays
+    pass: no +EV soft price vs Pinnacle
+[14/90] Athletics vs Colorado Rockies
+    pass: no +EV soft price vs Pinnacle
+[15/90] San Francisco Giants vs Chicago Cubs
+    pass: no +EV soft price vs Pinnacle
+[16/90] Minnesota Twins vs St. Louis Cardinals
+    pass: no +EV soft price vs Pinnacle
+[17/90] Toronto Blue Jays vs New York Yankees
+    pass: no +EV soft price vs Pinnacle
+[18/90] Baltimore Orioles vs San Diego Padres
+    pass: no +EV soft price vs Pinnacle
+[19/90] Washington Nationals vs Seattle Mariners
+    pass: no +EV soft price vs Pinnacle
+[20/90] Pittsburgh Pirates vs Miami Marlins
+    pass: no +EV soft price vs Pinnacle
+[21/90] Boston Red Sox vs Texas Rangers
+    pass: no +EV soft price vs Pinnacle
+[22/90] Cleveland Guardians vs Detroit Tigers
+    pass: no +EV soft price vs Pinnacle
+[23/90] Cincinnati Reds vs Arizona Diamondbacks
+    pass: no +EV soft price vs Pinnacle
+[24/90] Chicago White Sox vs Los Angeles Dodgers
+    pass: no +EV soft price vs Pinnacle
+[25/90] New York Mets vs Atlanta Braves
+    pass: no +EV soft price vs Pinnacle
+[26/90] Milwaukee Brewers vs Philadelphia Phillies
+    pass: no +EV soft price vs Pinnacle
+[27/90] Kansas City Royals vs Houston Astros
+    pass: no +EV soft price vs Pinnacle
+[28/90] San Francisco Giants vs Chicago Cubs
+    pass: no +EV soft price vs Pinnacle
+[29/90] Athletics vs Colorado Rockies
+    pass: no +EV soft price vs Pinnacle
+[30/90] Los Angeles Angels vs Tampa Bay Rays
+    pass: no +EV soft price vs Pinnacle
+[31/90] Pittsburgh Pirates vs Miami Marlins
+    pass: no +EV soft price vs Pinnacle
+[32/90] Washington Nationals vs Seattle Mariners
+    pass: no +EV soft price vs Pinnacle
+[33/90] Baltimore Orioles vs San Diego Padres
+    pass: no +EV soft price vs Pinnacle
+[34/90] Toronto Blue Jays vs New York Yankees
+    pass: no +EV soft price vs Pinnacle
+[35/90] Cincinnati Reds vs Arizona Diamondbacks
+    pass: no +EV soft price vs Pinnacle
+[36/90] New York Mets vs Atlanta Braves
+    pass: no +EV soft price vs Pinnacle
+[37/90] Milwaukee Brewers vs Philadelphia Phillies
+    pass: no +EV soft price vs Pinnacle
+[38/90] Minnesota Twins vs St. Louis Cardinals
+    BET St. Louis Cardinals @ 1.97 (draftkings) EV 0.4% -> lost (-1.00u)
+[39/90] Kansas City Royals vs Houston Astros
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[40/90] Chicago White Sox vs Los Angeles Dodgers
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[41/90] Athletics vs Colorado Rockies
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[42/90] San Francisco Giants vs Chicago Cubs
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[43/90] Los Angeles Angels vs Tampa Bay Rays
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[44/90] Boston Red Sox vs Texas Rangers
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[45/90] Philadelphia Phillies vs Miami Marlins
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: The read operation timed out
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[46/90] Washington Nationals vs Kansas City Royals
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[47/90] Cincinnati Reds vs New York Mets
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[48/90] St. Louis Cardinals vs San Diego Padres
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[49/90] Chicago Cubs vs Colorado Rockies
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[50/90] Texas Rangers vs Minnesota Twins
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[51/90] Houston Astros vs Detroit Tigers
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[52/90] Athletics vs Pittsburgh Pirates
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[53/90] Arizona Diamondbacks vs Los Angeles Angels
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[54/90] Los Angeles Dodgers vs Tampa Bay Rays
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[55/90] Philadelphia Phillies vs Miami Marlins
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[56/90] Washington Nationals vs Kansas City Royals
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[57/90] Boston Red Sox vs Toronto Blue Jays
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[58/90] New York Yankees vs Chicago White Sox
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[59/90] Cincinnati Reds vs New York Mets
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[60/90] Milwaukee Brewers vs Cleveland Guardians
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[61/90] St. Louis Cardinals vs San Diego Padres
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[62/90] Chicago Cubs vs Colorado Rockies
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[63/90] Texas Rangers vs Minnesota Twins
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[64/90] Houston Astros vs Detroit Tigers
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: The read operation timed out
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[65/90] Athletics vs Pittsburgh Pirates
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[66/90] Arizona Diamondbacks vs Los Angeles Angels
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[67/90] Seattle Mariners vs Baltimore Orioles
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[68/90] Los Angeles Dodgers vs Tampa Bay Rays
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[69/90] Cincinnati Reds vs New York Mets
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[70/90] Washington Nationals vs Kansas City Royals
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[71/90] Philadelphia Phillies vs Miami Marlins
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[72/90] Atlanta Braves vs San Francisco Giants
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[73/90] Houston Astros vs Detroit Tigers
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[74/90] St. Louis Cardinals vs San Diego Padres
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[75/90] Los Angeles Dodgers vs Tampa Bay Rays
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[76/90] Arizona Diamondbacks vs Los Angeles Angels
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[77/90] Boston Red Sox vs Toronto Blue Jays
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[78/90] New York Yankees vs Chicago White Sox
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[79/90] Atlanta Braves vs San Francisco Giants
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[80/90] Milwaukee Brewers vs Cleveland Guardians
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[81/90] Chicago Cubs vs Colorado Rockies
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[82/90] Seattle Mariners vs Baltimore Orioles
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[83/90] Athletics vs Pittsburgh Pirates
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[84/90] Boston Red Sox vs Toronto Blue Jays
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[85/90] Milwaukee Brewers vs Cleveland Guardians
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[86/90] Texas Rangers vs Minnesota Twins
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[87/90] Seattle Mariners vs Baltimore Orioles
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[88/90] Philadelphia Phillies vs New York Mets
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[89/90] New York Yankees vs Chicago White Sox
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+[90/90] Kansas City Royals vs St. Louis Cardinals
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+      ! gave up: HTTP Error 429: Too Many Requests
+    skip: no pinnacle close
+
+========================================================
+BACKTEST #1 RESULTS  (Pinnacle truth, bet FD/DK +EV spots)
+========================================================
+Games processed:   90
+  bets placed:     1
+  passes (no +EV): 37
+  skipped (data):  52
+
+Record:            0-1   (0.0%)
+Total profit:      -1.00 units (1u flat)
+ROI:               -100.0% per bet
+
+By edge size:
+  EV 0-1%:   1 bets  0-1  -1.00u  (-100.0% ROI)
+
+CAVEATS: 2-book soft side (not the live 5); only spots where FD/DK
+closed looser than Pinnacle. Small n by bucket — read directionally.
