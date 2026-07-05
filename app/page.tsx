@@ -16,31 +16,58 @@ type Bet = {
   modelProb: number; implied: number; ev: number; edge: number; time: string
 }
 
-const SHARP = ["fanduel","draftkings","betmgm","williamhill_us","betrivers"]
+// Books used only to establish the true probability — never appear in bet output.
+// Ordered by sharpness; first book with a line wins.
+const REFERENCE_BOOKS = ["lowvig"]
+
+// Books evaluated for +EV opportunities. Must not overlap with REFERENCE_BOOKS.
+const BETTABLE_BOOKS = ["fanduel", "draftkings", "betmgm", "williamhill_us", "betrivers"]
+
+function sharpProbs(
+  g: Game,
+): { trueAway: number; trueHome: number; method: "sharp" | "consensus" } | null {
+  // Primary: first available reference book
+  for (const refKey of REFERENCE_BOOKS) {
+    const book = g.bookmakers.find((b) => b.key === refKey)
+    const market = book?.markets.find((m) => m.key === "h2h")
+    const away = market?.outcomes.find((o) => o.name === g.away_team)
+    const home = market?.outcomes.find((o) => o.name === g.home_team)
+    if (away && home) {
+      const d = devig(away.price, home.price)
+      return { trueAway: d.probA, trueHome: d.probB, method: "sharp" }
+    }
+  }
+
+  // Fallback: consensus across bettable books
+  const awayProbs: number[] = []
+  const homeProbs: number[] = []
+  for (const b of g.bookmakers) {
+    if (!BETTABLE_BOOKS.includes(b.key)) continue
+    const m = b.markets.find((m) => m.key === "h2h")
+    const away = m?.outcomes.find((o) => o.name === g.away_team)
+    const home = m?.outcomes.find((o) => o.name === g.home_team)
+    if (!away || !home) continue
+    const d = devig(away.price, home.price)
+    awayProbs.push(d.probA)
+    homeProbs.push(d.probB)
+  }
+  if (awayProbs.length < 2) return null
+  return {
+    trueAway: awayProbs.reduce((a, b) => a + b, 0) / awayProbs.length,
+    trueHome: homeProbs.reduce((a, b) => a + b, 0) / homeProbs.length,
+    method: "consensus",
+  }
+}
+
 function findBets(games: Game[]): Bet[] {
   const bets: Bet[] = []
   for (const g of games) {
-    const h2hBooks = g.bookmakers.filter((b) => b.markets.some((m) => m.key === "h2h"))
-    if (h2hBooks.length < 4) continue
+    const probs = sharpProbs(g)
+    if (!probs) continue
+    const { trueAway, trueHome } = probs
 
-    const awayProbs: number[] = []
-    const homeProbs: number[] = []
-    for (const b of h2hBooks) {
-      if (SHARP.indexOf(b.key) === -1) continue
-      const m = b.markets.find((m) => m.key === "h2h")
-      if (!m) continue
-      const away = m.outcomes.find((o) => o.name === g.away_team)
-      const home = m.outcomes.find((o) => o.name === g.home_team)
-      if (!away || !home) continue
-      const d = devig(away.price, home.price)
-      awayProbs.push(d.probA)
-      homeProbs.push(d.probB)
-    }
-    if (awayProbs.length < 2) continue
-    const trueAway = awayProbs.reduce((a, b) => a + b, 0) / awayProbs.length
-    const trueHome = homeProbs.reduce((a, b) => a + b, 0) / homeProbs.length
-
-    for (const b of h2hBooks) {
+    for (const b of g.bookmakers) {
+      if (!BETTABLE_BOOKS.includes(b.key)) continue
       const m = b.markets.find((m) => m.key === "h2h")
       if (!m) continue
       for (const o of m.outcomes) {
