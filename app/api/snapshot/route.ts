@@ -29,10 +29,15 @@ export async function GET() {
     }
 
     const key = process.env.ODDS_API_KEY || ""
-    const oddsRes = await fetch(
-      "https://api.the-odds-api.com/v4/sports/baseball_mlb/odds/?apiKey=" + key + "&regions=us&markets=h2h&oddsFormat=american"
+    const sports = ["baseball_mlb", "basketball_wnba"]
+    const oddsResponses = await Promise.all(
+      sports.map((sport) =>
+        fetch(
+          "https://api.the-odds-api.com/v4/sports/" + sport + "/odds/?apiKey=" + key + "&regions=us&markets=h2h&oddsFormat=american"
+        )
+      )
     )
-    const games = await oddsRes.json()
+    const games = (await Promise.all(oddsResponses.map((r) => r.json()))).flat()
 
     let captured = 0
     for (const bet of upcoming) {

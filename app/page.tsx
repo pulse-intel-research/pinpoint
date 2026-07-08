@@ -9,11 +9,16 @@ import { Nav } from "./lib/Nav"
 type Outcome = { name: string; price: number }
 type Market = { key: string; outcomes: Outcome[] }
 type Bookmaker = { key: string; title: string; markets: Market[] }
-type Game = { id: string; home_team: string; away_team: string; commence_time: string; bookmakers: Bookmaker[] }
+type Game = { id: string; sport_key: string; home_team: string; away_team: string; commence_time: string; bookmakers: Bookmaker[] }
 
 type Bet = {
   id: string; gameId: string; commenceTime: string; team: string; opp: string; book: string; price: number
-  modelProb: number; implied: number; ev: number; edge: number; time: string
+  modelProb: number; implied: number; ev: number; edge: number; time: string; league: string
+}
+
+const LEAGUE_LABELS: Record<string, string> = {
+  baseball_mlb: "MLB",
+  basketball_wnba: "WNBA",
 }
 
 // Books used only to establish the true probability — never appear in bet output.
@@ -88,6 +93,7 @@ function findBets(games: Game[]): Bet[] {
           ev,
           edge: edgePercent(truth, o.price),
           time: new Date(g.commence_time).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+          league: LEAGUE_LABELS[g.sport_key] || g.sport_key,
         })
       }
     }
@@ -221,7 +227,10 @@ function BetCard({ b, rank }: { b: Bet; rank: number }) {
         <div style={{ fontSize: 12, fontWeight: 700, color: "#333", minWidth: 24, paddingTop: 3 }}>#{rank}</div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 4 }}>
-            <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.2px" }}>{b.team} <span style={{ color: "#555", fontWeight: 500, fontSize: 14 }}>ML</span></div>
+            <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.2px", display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#888", background: "#181818", border: "1px solid #262626", borderRadius: 5, padding: "2px 7px", letterSpacing: "0.04em" }}>{b.league}</span>
+              {b.team} <span style={{ color: "#555", fontWeight: 500, fontSize: 14 }}>ML</span>
+            </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
               <div style={{ fontSize: 22, fontWeight: 800, color: "#e8e8e8", letterSpacing: "-0.5px" }}>
                 {b.price > 0 ? "+" : ""}{b.price}
@@ -316,7 +325,7 @@ function Dashboard() {
             <span style={{ fontSize: 12, color: "#555", letterSpacing: "0.03em" }}>
               {loading
                 ? "Scanning sportsbooks…"
-                : `${bets.length} edge${bets.length !== 1 ? "s" : ""} · MLB moneyline${timeStr ? ` · Updated ${timeStr}` : ""}`}
+                : `${bets.length} edge${bets.length !== 1 ? "s" : ""} · MLB & WNBA moneyline${timeStr ? ` · Updated ${timeStr}` : ""}`}
             </span>
           </div>
           {!loading && (

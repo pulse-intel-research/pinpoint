@@ -8,10 +8,13 @@ export async function GET() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
     )
     const key = process.env.ODDS_API_KEY || ""
-    const scoresRes = await fetch(
-      "https://api.the-odds-api.com/v4/sports/baseball_mlb/scores/?apiKey=" + key + "&daysFrom=3"
+    const sports = ["baseball_mlb", "basketball_wnba"]
+    const scoresResponses = await Promise.all(
+      sports.map((sport) =>
+        fetch("https://api.the-odds-api.com/v4/sports/" + sport + "/scores/?apiKey=" + key + "&daysFrom=3")
+      )
     )
-    const games = await scoresRes.json()
+    const games = (await Promise.all(scoresResponses.map((r) => r.json()))).flat()
 
     const { data: bets, error: readErr } = await supabase
       .from("flagged_bets")
