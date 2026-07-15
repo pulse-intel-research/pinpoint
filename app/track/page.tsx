@@ -17,6 +17,7 @@ function unitsWon(price: number): number {
 export default function Track() {
   const [rows, setRows] = useState<Row[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     const supabase = createClient(
@@ -26,16 +27,26 @@ export default function Track() {
     supabase
       .from("flagged_bets")
       .select("*")
-      .not("result", "is", null)
-      .order("settled_at", { ascending: true })
-      .then(({ data }) => {
+      .order("flagged_at", { ascending: true })
+      .then(({ data, error }) => {
+        if (error) {
+          setLoadError(error.message)
+          setLoading(false)
+          return
+        }
         setRows((data as Row[]) || [])
         setLoading(false)
       })
   }, [])
 
+  const pending = rows
+    .filter((r) => r.result === null)
+    .sort((a, b) => (b.flagged_at || "").localeCompare(a.flagged_at || ""))
+
+  const settled = rows.filter((r) => r.result !== null)
+
   const gameMap = new Map<string, Row>()
-  for (const r of rows) {
+  for (const r of settled) {
     const key = r.team + "|" + r.opponent
     const existing = gameMap.get(key)
     if (!existing) {
@@ -90,15 +101,45 @@ export default function Track() {
 
           {loading ? (
             <div style={{ color: "#555", fontSize: 14 }}>Loading…</div>
-          ) : total === 0 ? (
-            <div style={{ background: "#111", border: "1px solid #1f1f1f", borderRadius: 14, padding: "48px 32px", textAlign: "center" }}>
-              <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 10 }}>No settled results yet</div>
-              <div style={{ fontSize: 14, color: "#555", lineHeight: 1.6 }}>
-                Results appear here automatically once games complete and settlement runs.
-              </div>
+          ) : loadError ? (
+            <div style={{ background: "#1a0d0d", border: "1px solid #3a1a1a", borderRadius: 10, padding: "14px 18px", color: "#e05252", fontSize: 14 }}>
+              Failed to load results: {loadError}
             </div>
           ) : (
             <>
+              {pending.length > 0 && (
+                <div style={{ background: "#111", border: "1px solid #1f1f1f", borderRadius: 12, padding: "20px 22px", marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, color: "#555", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 16, fontWeight: 600 }}>
+                    Pending · awaiting settlement
+                  </div>
+                  {pending.map((r) => (
+                    <div key={r.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #171717" }}>
+                      <div>
+                        <div style={{ fontSize: 14, fontWeight: 500 }}>{r.team} <span style={{ color: "#555", fontWeight: 400 }}>vs {r.opponent}</span></div>
+                        <div style={{ color: "#555", fontSize: 12, marginTop: 3 }}>
+                          {r.book} · {r.price > 0 ? "+" : ""}{r.price} · {Math.round(r.edge * 10) / 10}% edge · {Math.round(r.ev * 10) / 10}% EV
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#c9a227" }}>PENDING</div>
+                        <div style={{ color: "#555", fontSize: 11, marginTop: 3 }}>
+                          {new Date(r.flagged_at).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {total === 0 ? (
+                <div style={{ background: "#111", border: "1px solid #1f1f1f", borderRadius: 14, padding: "48px 32px", textAlign: "center" }}>
+                  <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 10 }}>No settled results yet</div>
+                  <div style={{ fontSize: 14, color: "#555", lineHeight: 1.6 }}>
+                    Results appear here automatically once games complete and settlement runs.
+                  </div>
+                </div>
+              ) : (
+              <>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 16 }}>
                 {[
                   { label: "Record", value: `${wins}–${losses}`, color: "#e8e8e8" },
@@ -143,6 +184,8 @@ export default function Track() {
                   </div>
                 ))}
               </div>
+              </>
+              )}
             </>
           )}
         </div>
