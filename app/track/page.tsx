@@ -7,7 +7,7 @@ import { Nav } from "../lib/Nav"
 type Row = {
   id: string; team: string; opponent: string; book: string; price: number
   edge: number; ev: number; result: string | null; final_score: string | null
-  settled_at: string | null; flagged_at: string; _bookCount: number
+  settled_at: string | null; flagged_at: string; clv: number | null; _bookCount: number
 }
 
 function unitsWon(price: number): number {
@@ -79,6 +79,11 @@ export default function Track() {
   }
   const roi = total > 0 ? Math.round((net / total) * 1000) / 10 : 0
 
+  const clvGames = games.filter((r) => r.clv !== null)
+  const avgClv = clvGames.length > 0
+    ? Math.round((clvGames.reduce((a, r) => a + (r.clv || 0), 0) / clvGames.length) * 10) / 10
+    : null
+
   const W = 680, H = 200, pad = 24
   const ys = points.map((p) => p.y).concat([0])
   const minY = Math.min(...ys), maxY = Math.max(...ys)
@@ -140,11 +145,12 @@ export default function Track() {
                 </div>
               ) : (
               <>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 16 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 16 }}>
                 {[
                   { label: "Record", value: `${wins}–${losses}`, color: "#e8e8e8" },
                   { label: "Hit rate", value: `${hitRate}%`, color: "#e8e8e8" },
                   { label: "ROI / bet", value: `${roi >= 0 ? "+" : ""}${roi}%`, color: roi >= 0 ? "#1D9E75" : "#e05252" },
+                  { label: "Avg CLV", value: avgClv === null ? "—" : `${avgClv >= 0 ? "+" : ""}${avgClv}%`, color: avgClv === null ? "#555" : avgClv >= 0 ? "#1D9E75" : "#e05252" },
                 ].map((s) => (
                   <div key={s.label} style={{ background: "#111", border: "1px solid #1f1f1f", borderRadius: 12, padding: "20px 22px" }}>
                     <div style={{ fontSize: 11, color: "#555", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8, fontWeight: 600 }}>{s.label}</div>
@@ -174,6 +180,11 @@ export default function Track() {
                       <div style={{ color: "#555", fontSize: 12, marginTop: 3 }}>
                         {r.book} · {r.price > 0 ? "+" : ""}{r.price} · {Math.round(r.edge * 10) / 10}% edge{r._bookCount > 1 ? ` · ${r._bookCount} books` : ""}
                       </div>
+                      {r.clv !== null && (
+                        <div style={{ fontSize: 11, marginTop: 3, color: r.clv >= 0 ? "#1D9E75" : "#e05252" }}>
+                          {r.clv >= 0 ? `Beat close by ${r.clv}%` : `Worse than close by ${Math.abs(r.clv)}%`}
+                        </div>
+                      )}
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: r.result === "win" ? "#1D9E75" : "#e05252" }}>

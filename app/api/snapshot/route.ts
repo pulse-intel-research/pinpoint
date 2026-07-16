@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const pollSecret = process.env.POLL_SECRET
+    const url = new URL(req.url)
+    const provided = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") || url.searchParams.get("secret")
+    if (!pollSecret || provided !== pollSecret) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL || "",
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""

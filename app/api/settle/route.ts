@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
+import { americanToImpliedProb } from "../../lib/ev"
 
 export async function GET() {
   try {
@@ -33,12 +34,16 @@ export async function GET() {
       if (!teamScore || !oppScore) continue
       const won = Number(teamScore.score) > Number(oppScore.score)
       const finalScore = bet.team + " " + teamScore.score + " - " + oppScore.score + " " + bet.opponent
+      const clv = bet.closing_price != null
+        ? Math.round((americanToImpliedProb(bet.closing_price) - americanToImpliedProb(bet.price)) * 1000) / 10
+        : null
       await supabase
         .from("flagged_bets")
         .update({
           result: won ? "win" : "loss",
           final_score: finalScore,
           settled_at: new Date().toISOString(),
+          clv,
         })
         .eq("id", bet.id)
       settled++
