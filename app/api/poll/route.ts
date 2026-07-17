@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 import { findBets, type Bet } from "../../../lib/findBets"
+import { sendEdgeAlert } from "../../lib/email"
 
 const SPORTS = ["baseball_mlb", "basketball_wnba"]
 
@@ -21,7 +22,7 @@ export async function GET(req: Request) {
       SPORTS.map((sport) =>
         fetch(
           `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${apiKey}&regions=us&markets=h2h&oddsFormat=american`,
-          { next: { revalidate: 60 } }
+          { cache: "no-store" }
         )
       )
     )
@@ -46,23 +47,23 @@ export async function GET(req: Request) {
         bestByGameTeam.set(k, b)
       }
     }
-    const rows = Array.from(bestByGameTeam.values()).map((b) => ({
-      game_id: b.gameId,
-      team: b.team,
-      opponent: b.opp,
-      book: b.book,
-      price: b.price,
-      model_prob: b.modelProb,
-      implied_prob: b.implied,
-      edge: b.edge,
-      ev: b.ev,
-      commence_time: b.commenceTime || null,
-    }))
-
     let inserted = 0
     let updated = 0
+    let notified = 0
     const logged: { game_id: string; team: string; ev: number; action: "inserted" | "updated" }[] = []
-    for (const row of rows) {
+    for (const b of bestByGameTeam.values()) {
+      const row = {
+        game_id: b.gameId,
+        team: b.team,
+        opponent: b.opp,
+        book: b.book,
+        price: b.price,
+        model_prob: b.modelProb,
+        implied_prob: b.implied,
+        edge: b.edge,
+        ev: b.ev,
+        commence_time: b.commenceTime || null,
+      }
       const { data: existing } = await supabase
         .from("flagged_bets")
         .select("id, ev")
@@ -71,9 +72,25 @@ export async function GET(req: Request) {
         .is("result", null)
         .single()
       if (!existing) {
-        await supabase.from("flagged_bets").insert(row)
+        const { data: created } = await supabase.from("flagged_bets").insert(row).select("id").single()
         inserted++
         logged.push({ game_id: row.game_id, team: row.team, ev: row.ev, action: "inserted" })
+
+        const alert = await sendEdgeAlert({
+          team: b.team,
+          opponent: b.opp,
+          league: b.league,
+          book: b.book,
+          price: b.price,
+          ev: b.ev,
+          edge: b.edge,
+        })
+        if (alert.ok && created) {
+          await supabase.from("flagged_bets").update({ notified: true }).eq("id", created.id)
+          notified++
+        } else if (!alert.ok) {
+          console.error("poll: edge alert email failed", alert.error)
+        }
       } else if ((row.ev ?? 0) > (existing.ev ?? 0)) {
         await supabase.from("flagged_bets").update(row).eq("id", existing.id)
         updated++
@@ -81,7 +98,7 @@ export async function GET(req: Request) {
       }
     }
 
-    return NextResponse.json({ found: bets.length, candidates: rows.length, inserted, updated, logged })
+    return NextResponse.json({ found: bets.length, candidates: bestByGameTeam.size, inserted, updated, notified, logged })
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 })
   }

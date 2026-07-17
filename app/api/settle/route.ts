@@ -25,10 +25,27 @@ export async function GET() {
       return NextResponse.json({ error: readErr.message }, { status: 500 })
     }
 
+    // The Odds API's scores endpoint only supports daysFrom up to 3 — a pending bet whose
+    // game already commenced more than 3 days ago can never be matched by this lookup again.
+    const MAX_LOOKBACK_MS = 3 * 24 * 60 * 60 * 1000
+    const now = Date.now()
+
     let settled = 0
+    const stale: { id: string; game_id: string; team: string; opponent: string; commence_time: string }[] = []
     for (const bet of bets || []) {
       const game = games.find((g: any) => g.id === bet.game_id)
-      if (!game || !game.completed || !game.scores) continue
+      if (!game || !game.completed || !game.scores) {
+        if (bet.commence_time && now - new Date(bet.commence_time).getTime() > MAX_LOOKBACK_MS) {
+          stale.push({
+            id: bet.id,
+            game_id: bet.game_id,
+            team: bet.team,
+            opponent: bet.opponent,
+            commence_time: bet.commence_time,
+          })
+        }
+        continue
+      }
       const teamScore = game.scores.find((s: any) => s.name === bet.team)
       const oppScore = game.scores.find((s: any) => s.name === bet.opponent)
       if (!teamScore || !oppScore) continue
@@ -48,7 +65,10 @@ export async function GET() {
         .eq("id", bet.id)
       settled++
     }
-    return NextResponse.json({ settled, checked: (bets || []).length })
+    if (stale.length > 0) {
+      console.warn("settle: bets past the 3-day scores lookback window, will never auto-settle", stale)
+    }
+    return NextResponse.json({ settled, checked: (bets || []).length, stale })
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 })
   }
