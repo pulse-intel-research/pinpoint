@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 import { findBets, type Bet } from "../../../lib/findBets"
 import { sendEdgeAlert } from "../../lib/email"
-
+import { getReferencePrice, minutesUntilCommence, CAPTURE_RISK_WINDOW_MINUTES } from "../../../lib/captureClosingPrice"
 const SPORTS = ["baseball_mlb", "basketball_wnba"]
 
 export async function GET(req: Request) {
@@ -32,7 +32,8 @@ export async function GET(req: Request) {
     }
     const games = (await Promise.all(responses.map((res) => res.json()))).flat()
 
-    const bets = findBets(games)
+    const bets = findBets(games) 
+    const gamesById = new Map(games.map((g: any) => [g.id, g]))
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -52,7 +53,7 @@ export async function GET(req: Request) {
     let notified = 0
     const logged: { game_id: string; team: string; ev: number; action: "inserted" | "updated" }[] = []
     for (const b of bestByGameTeam.values()) {
-      const row = {
+      const row: Record<string, any> = {
         game_id: b.gameId,
         team: b.team,
         opponent: b.opp,
@@ -64,6 +65,14 @@ export async function GET(req: Request) {
         ev: b.ev,
         commence_time: b.commenceTime || null,
       }
+      if (b.commenceTime && minutesUntilCommence(b.commenceTime) < CAPTURE_RISK_WINDOW_MINUTES) {
+  const game = gamesById.get(b.gameId)
+  const closingPrice = game ? getReferencePrice(game, b.team) : null
+  if (closingPrice != null) {
+    row.closing_price = closingPrice
+    row.closing_captured_at = new Date().toISOString()
+  }
+}
       const { data: existing } = await supabase
         .from("flagged_bets")
         .select("id, ev")
