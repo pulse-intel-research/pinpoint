@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
-import { findBets, type Bet } from "../../../lib/findBets"
+import { findBets, type Bet, type Game } from "../../../lib/findBets"
 import { sendEdgeAlert } from "../../lib/email"
 import { getReferencePrice, minutesUntilCommence, CAPTURE_RISK_WINDOW_MINUTES } from "../../../lib/captureClosingPrice"
+import { fetchOddsPapiGames } from "../../../lib/oddsPapiAdapter"
 const SPORTS = ["baseball_mlb", "basketball_wnba"]
+
+// OddsPapi's free tier (250 req/month) is far tighter than the-odds-api's — a full poll
+// cycle costs ~7 requests there, so calling it on every 8x/day cycle would blow the monthly
+// quota in days. Only attempt it on the first cycle of each UTC day.
+function shouldPollOddsPapi(): boolean {
+  return new Date().getUTCHours() < 3
+}
 
 export async function GET(req: Request) {
   try {
@@ -15,25 +23,46 @@ export async function GET(req: Request) {
     }
 
     const apiKey = process.env.ODDS_API_KEY
+    let theOddsApiGames: Game[] = []
+    let theOddsApiError: string | null = null
     if (!apiKey) {
-      return NextResponse.json({ error: "Missing API key" }, { status: 500 })
-    }
-    const responses = await Promise.all(
-      SPORTS.map((sport) =>
-        fetch(
-          `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${apiKey}&regions=us&markets=h2h&oddsFormat=american`,
-          { cache: "no-store" }
+      theOddsApiError = "Missing ODDS_API_KEY"
+    } else {
+      const responses = await Promise.all(
+        SPORTS.map((sport) =>
+          fetch(
+            `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${apiKey}&regions=us&markets=h2h&oddsFormat=american`,
+            { cache: "no-store" }
+          )
         )
       )
-    )
-    const failed = responses.find((res) => !res.ok)
-    if (failed) {
-      return NextResponse.json({ error: `API responded with ${failed.status}` }, { status: failed.status })
+      const failed = responses.find((res) => !res.ok)
+      if (failed) {
+        theOddsApiError = `the-odds-api responded with ${failed.status}`
+      } else {
+        theOddsApiGames = (await Promise.all(responses.map((res) => res.json()))).flat()
+      }
     }
-    const games = (await Promise.all(responses.map((res) => res.json()))).flat()
 
-    const bets = findBets(games) 
-    const gamesById = new Map(games.map((g: any) => [g.id, g]))
+    // OddsPapi is a fallback/alternative source, throttled to ~1x/day to respect its much
+    // tighter free-tier quota. A failure here must never break the-odds-api's own results.
+    let oddsPapiGames: Game[] = []
+    const oddsPapiKey = process.env.ODDSPAPI_API_KEY
+    if (oddsPapiKey && shouldPollOddsPapi()) {
+      try {
+        oddsPapiGames = await fetchOddsPapiGames(oddsPapiKey)
+      } catch (e) {
+        console.error("poll: OddsPapi fetch failed", e)
+      }
+    }
+
+    const games: Game[] = [...theOddsApiGames, ...oddsPapiGames]
+    if (games.length === 0) {
+      return NextResponse.json({ error: theOddsApiError || "No games available from any source" }, { status: 502 })
+    }
+
+    const bets = findBets(games)
+    const gamesById = new Map(games.map((g) => [g.id, g]))
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL || "",

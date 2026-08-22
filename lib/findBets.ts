@@ -17,8 +17,9 @@ const LEAGUE_LABELS: Record<string, string> = {
 }
 
 // Books used only to establish the true probability — never appear in bet output.
-// Ordered by sharpness; first book with a line wins.
-export const REFERENCE_BOOKS = ["lowvig"]
+// Ordered by sharpness; first book with a line wins. "lowvig" comes from the-odds-api;
+// "pinnacle" comes from OddsPapi (lowvig.ag isn't usable there — see lib/oddsPapiAdapter.ts).
+export const REFERENCE_BOOKS = ["lowvig", "pinnacle"]
 
 // Books evaluated for +EV opportunities. Must not overlap with REFERENCE_BOOKS.
 export const BETTABLE_BOOKS = ["fanduel", "draftkings", "betmgm", "williamhill_us", "betrivers"]
