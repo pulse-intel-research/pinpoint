@@ -4,7 +4,7 @@ import { findBets, type Bet, type Game } from "../../../lib/findBets"
 import { sendEdgeAlert } from "../../lib/email"
 import { getReferencePrice, minutesUntilCommence, CAPTURE_RISK_WINDOW_MINUTES } from "../../../lib/captureClosingPrice"
 import { fetchOddsPapiGames } from "../../../lib/oddsPapiAdapter"
-const SPORTS = ["baseball_mlb", "basketball_wnba"]
+const SPORTS = ["baseball_mlb", "basketball_wnba", "americanfootball_nfl"]
 
 // OddsPapi's free tier (250 req/month) is far tighter than the-odds-api's — a full poll
 // cycle costs ~7 requests there, so calling it on every 8x/day cycle would blow the monthly

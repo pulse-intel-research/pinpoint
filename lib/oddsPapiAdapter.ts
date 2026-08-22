@@ -2,9 +2,15 @@ import type { Game, Bookmaker } from "./findBets"
 
 const BASE = "https://api.oddspapi.io/v4"
 
+// sportId/tournamentId confirmed live against /v4/sports and /v4/tournaments?sportId=X for
+// each -- OddsPapi's sport IDs don't follow a guessable pattern (American Football is 14, not
+// 16 as a naive guess might assume; 16 is actually ESport Dota).
+// tournamentId 31 is NFL regular season specifically; OddsPapi models NFL Preseason (233) as a
+// separate tournament, mirroring the-odds-api's separate americanfootball_nfl_preseason key.
 export const ODDSPAPI_SPORTS: { sportKey: string; sportId: number; tournamentId: number }[] = [
   { sportKey: "baseball_mlb", sportId: 13, tournamentId: 109 },
   { sportKey: "basketball_wnba", sportId: 11, tournamentId: 486 },
+  { sportKey: "americanfootball_nfl", sportId: 14, tournamentId: 31 },
 ]
 
 // OddsPapi always resolves "lowvig.ag" to its clone source ("betonline.ag") rather than lowvig
@@ -104,7 +110,29 @@ async function fetchJson(url: string, label: string): Promise<any> {
 
 async function fetchFixtures(apiKey: string, sportId: number, tournamentId: number, from: string, to: string): Promise<OddsPapiFixture[]> {
   const url = `${BASE}/fixtures?apiKey=${apiKey}&sportId=${sportId}&tournamentId=${tournamentId}&from=${from}&to=${to}&hasOdds=true`
-  const data = (await fetchJson(url, `OddsPapi fixtures (sport ${sportId})`)) as OddsPapiFixture[]
+  const maxAttempts = 3
+  let data: OddsPapiFixture[] = []
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const res = await fetch(url, { cache: "no-store" })
+    if (res.ok) {
+      data = (await res.json()) as OddsPapiFixture[]
+      break
+    }
+    if (res.status === 404) {
+      // OddsPapi 404s (rather than returning []) when nothing matches the from/to window --
+      // the normal state for a sport whose next slate falls outside it (e.g. NFL between
+      // weekly games, or before the season starts). Only treat this specific error code as
+      // "no fixtures"; any other 404 body is a real problem and should still surface.
+      const body = await res.json().catch(() => null)
+      if (body?.error?.code === "FIXTURE_NOT_FOUND") return []
+    }
+    const retryable = res.status === 429 || res.status >= 500
+    if (retryable && attempt < maxAttempts) {
+      await sleep(1500 * attempt)
+      continue
+    }
+    throw new Error(`OddsPapi fixtures (sport ${sportId}) failed: ${res.status}`)
+  }
   // statusId 0 = Pre-Game; exclude in-progress/finished games, whose current moneyline no
   // longer reflects a pre-game line comparable to the other bookmakers' pre-game prices.
   return data.filter((fx) => fx.statusId === 0)
@@ -116,8 +144,11 @@ async function fetchOddsByTournaments(apiKey: string, tournamentIds: number[], b
 }
 
 export async function fetchOddsPapiGames(apiKey: string): Promise<Game[]> {
+  // Wide enough to reliably span a full NFL week (Thu/Sun/Mon cadence with multi-day gaps
+  // between slates) -- a narrower window tuned for MLB/WNBA's daily cadence would routinely
+  // miss the next NFL slate if queried on an off day.
   const from = new Date().toISOString().slice(0, 10)
-  const to = new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 10)
+  const to = new Date(Date.now() + 8 * 86400000).toISOString().slice(0, 10)
   const tournamentIds = ODDSPAPI_SPORTS.map((s) => s.tournamentId)
 
   // Sequential, not Promise.all -- OddsPapi returns transient 429s under concurrent requests.

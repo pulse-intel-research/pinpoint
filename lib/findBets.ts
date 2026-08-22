@@ -14,6 +14,7 @@ export type Bet = {
 const LEAGUE_LABELS: Record<string, string> = {
   baseball_mlb: "MLB",
   basketball_wnba: "WNBA",
+  americanfootball_nfl: "NFL",
 }
 
 // Books used only to establish the true probability — never appear in bet output.
