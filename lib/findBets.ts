@@ -25,6 +25,15 @@ export const REFERENCE_BOOKS = ["lowvig", "pinnacle"]
 // Books evaluated for +EV opportunities. Must not overlap with REFERENCE_BOOKS.
 export const BETTABLE_BOOKS = ["fanduel", "draftkings", "betmgm", "williamhill_us", "betrivers"]
 
+// Sanity backstop. A moneyline edge this large (percentage points) or EV this high against a
+// mainstream US book almost always means bad reference data — a stale line, the wrong side
+// matched, a postponed/in-play game — not a real market inefficiency. findBets drops any
+// candidate past these bounds and logs it for manual review. Consensus-fallback references
+// (no sharp book in the feed) are noisier than a true sharp line, so they get a tighter bound.
+export const MAX_PLAUSIBLE_EDGE = 8
+export const MAX_PLAUSIBLE_CONSENSUS_EDGE = 5
+export const MAX_PLAUSIBLE_EV = 25
+
 export function sharpProbs(
   g: Game,
 ): { trueAway: number; trueHome: number; method: "sharp" | "consensus" } | null {
@@ -63,7 +72,15 @@ export function sharpProbs(
 
 export function findBets(games: Game[]): Bet[] {
   const bets: Bet[] = []
+  const now = Date.now()
   for (const g of games) {
+    // Pre-game lines only. Once a game starts, the-odds-api keeps returning it with in-play
+    // prices, and books update those at different speeds — devigging one book's stale in-play
+    // number against another's fresh one manufactures large phantom edges (whole game lights
+    // up at once off a single bad reference). The OddsPapi adapter already filters this via
+    // statusId; the-odds-api exposes no in-play flag, so gate on commence_time here.
+    if (!g.commence_time || new Date(g.commence_time).getTime() <= now) continue
+
     const probs = sharpProbs(g)
     if (!probs) continue
     const { trueAway, trueHome } = probs
@@ -77,6 +94,18 @@ export function findBets(games: Game[]): Bet[] {
         const ev = calculateEV(truth, o.price)
         if (ev < 2) continue
         if (o.price > 250 || o.price < -250) continue
+
+        const edge = edgePercent(truth, o.price)
+        const edgeCap = probs.method === "consensus" ? MAX_PLAUSIBLE_CONSENSUS_EDGE : MAX_PLAUSIBLE_EDGE
+        if (edge > edgeCap || ev > MAX_PLAUSIBLE_EV) {
+          console.warn(
+            `findBets: suppressed implausible edge — ${o.name} (${g.away_team} @ ${g.home_team}) ` +
+              `${b.key} ${o.price}: edge ${edge}% ev ${ev}% method ${probs.method}, ` +
+              `truth ${(truth * 100).toFixed(1)}% vs implied ${(americanToImpliedProb(o.price) * 100).toFixed(1)}%`
+          )
+          continue
+        }
+
         bets.push({
           id: g.id + o.name + b.key,
           gameId: g.id,
@@ -88,7 +117,7 @@ export function findBets(games: Game[]): Bet[] {
           modelProb: Math.round(truth * 1000) / 10,
           implied: Math.round(americanToImpliedProb(o.price) * 1000) / 10,
           ev,
-          edge: edgePercent(truth, o.price),
+          edge,
           time: new Date(g.commence_time).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
           league: LEAGUE_LABELS[g.sport_key] || g.sport_key,
         })

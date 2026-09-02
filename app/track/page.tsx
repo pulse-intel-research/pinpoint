@@ -7,11 +7,20 @@ import { Nav } from "../lib/Nav"
 type Row = {
   id: string; team: string; opponent: string; book: string; price: number
   edge: number; ev: number; result: string | null; final_score: string | null
-  settled_at: string | null; flagged_at: string; clv: number | null; _bookCount: number
+  settled_at: string | null; flagged_at: string; commence_time: string | null
+  clv: number | null; _bookCount: number
 }
 
 function unitsWon(price: number): number {
   return price > 0 ? price / 100 : 100 / Math.abs(price)
+}
+
+// A flag placed after first pitch was scored against in-play prices, not a real pre-game
+// line — exclude it so the track record reflects only genuine pre-game bets. findBets no
+// longer produces these, but historical rows from before that fix remain in the table.
+function isPregame(r: Row): boolean {
+  if (!r.commence_time) return false
+  return new Date(r.flagged_at).getTime() < new Date(r.commence_time).getTime()
 }
 
 export default function Track() {
@@ -39,11 +48,14 @@ export default function Track() {
       })
   }, [])
 
-  const pending = rows
+  const pregameRows = rows.filter(isPregame)
+  const excludedInPlay = rows.filter((r) => r.result !== null && !isPregame(r)).length
+
+  const pending = pregameRows
     .filter((r) => r.result === null)
     .sort((a, b) => (b.flagged_at || "").localeCompare(a.flagged_at || ""))
 
-  const settled = rows.filter((r) => r.result !== null)
+  const settled = pregameRows.filter((r) => r.result !== null)
 
   const gameMap = new Map<string, Row>()
   for (const r of settled) {
@@ -101,7 +113,10 @@ export default function Track() {
         <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 48px" }}>
           <div style={{ marginBottom: 28 }}>
             <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: "-0.3px", marginBottom: 4 }}>Track record</div>
-            <div style={{ fontSize: 13, color: "#555" }}>Settled results · one bet per game · best-priced book</div>
+            <div style={{ fontSize: 13, color: "#555" }}>
+              Settled results · one bet per game · best-priced book
+              {excludedInPlay > 0 ? ` · ${excludedInPlay} in-play flag${excludedInPlay === 1 ? "" : "s"} excluded` : ""}
+            </div>
           </div>
 
           {loading ? (
