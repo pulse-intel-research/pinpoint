@@ -1,3 +1,4 @@
+// Core edge-finding logic: devig a sharp reference book to a true probability, then scan the bettable books for +EV moneyline bets.
 import { calculateEV, edgePercent, americanToImpliedProb } from "../app/lib/ev"
 import { devig } from "../app/lib/devig"
 
