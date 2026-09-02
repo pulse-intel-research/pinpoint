@@ -7,7 +7,14 @@ import { Nav } from "../lib/Nav"
 import { useAuth } from "../lib/useAuth"
 
 const LEAGUES = ["MLB", "NBA", "NFL", "NHL"]
-const MARKETS = ["moneyline", "props", "parlays"]
+const MARKETS: { value: string; label: string }[] = [
+  { value: "moneyline",  label: "Moneyline" },
+  { value: "totals",     label: "Totals (Over/Under)" },
+  { value: "spreads",    label: "Spreads/Run Lines" },
+  { value: "props",      label: "Props" },
+  { value: "parlays",    label: "Parlays" },
+]
+const COMING_SOON_SPORTS = ["Tennis", "Soccer", "Basketball", "Cricket", "Motor Racing"]
 const SPORTSBOOKS = ["FanDuel", "DraftKings", "BetMGM", "Caesars", "BetRivers"]
 
 type Prefs = {
@@ -38,6 +45,19 @@ function Chip({ label, active, onToggle }: { label: string; active: boolean; onT
     >
       {label}
     </button>
+  )
+}
+
+function ComingSoonChip({ label }: { label: string }) {
+  return (
+    <div style={{
+      padding: "7px 15px", borderRadius: 8, fontSize: 13, fontWeight: 500,
+      border: "1px solid #181818", background: "#0d0d0d", color: "#2e2e2e",
+      display: "flex", alignItems: "center", gap: 7, cursor: "default", userSelect: "none",
+    }}>
+      {label}
+      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "#2a2a2a", textTransform: "uppercase" }}>Soon</span>
+    </div>
   )
 }
 
@@ -131,9 +151,15 @@ export default function Settings() {
             <>
               <div style={{ background: "#111", border: "1px solid #1f1f1f", borderRadius: 14, padding: "24px", marginBottom: 16 }}>
                 <SectionLabel>Leagues</SectionLabel>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
                   {LEAGUES.map((l) => (
                     <Chip key={l} label={l} active={prefs.leagues.includes(l)} onToggle={() => toggle("leagues", l)} />
+                  ))}
+                </div>
+                <SectionLabel>More sports</SectionLabel>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {COMING_SOON_SPORTS.map((s) => (
+                    <ComingSoonChip key={s} label={s} />
                   ))}
                 </div>
               </div>
@@ -142,7 +168,7 @@ export default function Settings() {
                 <SectionLabel>Market types</SectionLabel>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {MARKETS.map((m) => (
-                    <Chip key={m} label={m.charAt(0).toUpperCase() + m.slice(1)} active={prefs.markets.includes(m)} onToggle={() => toggle("markets", m)} />
+                    <Chip key={m.value} label={m.label} active={prefs.markets.includes(m.value)} onToggle={() => toggle("markets", m.value)} />
                   ))}
                 </div>
               </div>
