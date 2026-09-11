@@ -9,7 +9,7 @@ export async function GET() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
     )
     const key = process.env.ODDS_API_KEY || ""
-    const sports = ["baseball_mlb", "basketball_wnba"]
+    const sports = ["baseball_mlb", "basketball_wnba", "americanfootball_nfl"]
     const scoresResponses = await Promise.all(
       sports.map((sport) =>
         fetch("https://api.the-odds-api.com/v4/sports/" + sport + "/scores/?apiKey=" + key + "&daysFrom=3")
